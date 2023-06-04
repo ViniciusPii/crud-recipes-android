@@ -28,11 +28,38 @@ class HomeViewModel(
                     } else {
                         _recipes.value = State.Empty
                     }
-                }, 3000)
+                }, 1500)
             } catch (e: Exception) {
                 Handler().postDelayed({
                     _recipes.value = State.Error(e.message.toString())
-                }, 3000)
+                }, 1500)
+            }
+        }
+    }
+
+    fun removeRecipe(recipe: Recipe) {
+        viewModelScope.launch {
+            try {
+                val currentRecipes = _recipes.value
+
+                if (currentRecipes is State.Success) {
+                    val updatedRecipes = currentRecipes.data.toMutableList()
+                    updatedRecipes.remove(recipe)
+
+                    _recipes.value = State.Loading
+
+                    recipeRepository.removeRecipe(recipe)
+
+                    Handler().postDelayed({
+                        if (updatedRecipes.isNotEmpty()) {
+                            _recipes.value = State.Success(updatedRecipes)
+                        } else {
+                            _recipes.value = State.Empty
+                        }
+                    }, 1000)
+                }
+            } catch (e: Exception) {
+                _recipes.value = State.Error(e.message.toString())
             }
         }
     }

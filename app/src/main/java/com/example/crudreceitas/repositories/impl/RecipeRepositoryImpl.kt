@@ -4,30 +4,29 @@ import com.example.crudreceitas.models.Recipe
 import com.example.crudreceitas.repositories.RecipeRepository
 
 class RecipeRepositoryImpl : RecipeRepository {
+    private val recipes = mutableListOf<Recipe>()
     override suspend fun getAllRecipes(): List<Recipe> {
 
         try {
-            val recipes = mutableListOf<Recipe>()
-
-
-//            for (i in 1..10) {
-//                recipes.add(
-//                    Recipe(
-//                        "Vini Sales",
-//                        i.toString(),
-//                        "2 xícaras de trigo. 3 colheres de açucar. 2 colheres de manteiga.",
-//                        "Bolo de Cenoura",
-//                        "Doce"
-//                    )
-//                )
-//            }
-
-
+            for (i in 1..3) {
+                recipes.add(
+                    Recipe(
+                        type = "Salgado",
+                        name = "Torta de Frango",
+                        author = "Vini",
+                        id = i.toString(),
+                        ingredients = "Frango, Farinha e outros",
+                    )
+                )
+            }
             return recipes
-
             throw Exception("Forçando uma exceção")
         } catch (e: Exception) {
             throw Exception("Error")
         }
+    }
+
+    override suspend fun removeRecipe(recipe: Recipe) {
+        recipes.remove(recipe)
     }
 }
