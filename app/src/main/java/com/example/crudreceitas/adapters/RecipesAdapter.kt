@@ -37,12 +37,8 @@ class RecipesAdapter(
                 itemTitle.text = recipe.name
                 itemType.text = "Tipo: ${recipe.type}"
                 itemAuthor.text = "Author: ${recipe.author}"
-                binding.root.setOnClickListener {
-                    onShowClick(recipe.id.toString())
-                }
-                binding.itemDelete.setOnClickListener {
-                    onRemoveClick(recipe)
-                }
+                binding.root.setOnClickListener { onShowClick(recipe.id.toString()) }
+                binding.itemDelete.setOnClickListener { onRemoveClick(recipe) }
             }
         }
     }

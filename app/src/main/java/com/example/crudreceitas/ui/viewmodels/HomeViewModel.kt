@@ -63,11 +63,12 @@ class HomeViewModel(
             }
         }
     }
+
+    sealed interface State {
+        object Loading : State
+        object Empty : State
+        data class Success(val data: List<Recipe>) : State
+        data class Error(val message: String) : State
+    }
 }
 
-sealed interface State {
-    object Loading : State
-    object Empty : State
-    data class Success(val data: List<Recipe>) : State
-    data class Error(val message: String) : State
-}

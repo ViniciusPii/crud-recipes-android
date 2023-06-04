@@ -10,7 +10,7 @@ import com.example.crudreceitas.adapters.RecipesAdapter
 import com.example.crudreceitas.databinding.ActivityHomeBinding
 import com.example.crudreceitas.models.Recipe
 import com.example.crudreceitas.ui.viewmodels.HomeViewModel
-import com.example.crudreceitas.ui.viewmodels.State
+import com.example.crudreceitas.ui.viewmodels.HomeViewModel.State
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class HomeActivity : AppCompatActivity() {
