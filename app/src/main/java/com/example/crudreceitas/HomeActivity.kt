@@ -20,6 +20,8 @@ class HomeActivity : AppCompatActivity() {
 
     private val viewModel: HomeViewModel by viewModel()
 
+    private lateinit var adapter: RecipesAdapter
+
     private val stateObserver = Observer<State> { state ->
         when (state) {
             is State.Loading -> showLoading()
@@ -35,6 +37,8 @@ class HomeActivity : AppCompatActivity() {
 
         viewModel.recipes.observe(this, stateObserver)
         viewModel.getAllRecipes()
+
+        saveRecipe()
     }
 
     private fun showLoading() {
@@ -71,14 +75,25 @@ class HomeActivity : AppCompatActivity() {
     private fun initRecyclerView(recipes: List<Recipe>) {
         binding.recycler.layoutManager = LinearLayoutManager(this)
         binding.recycler.setHasFixedSize(true)
-        binding.recycler.adapter = RecipesAdapter(
-            recipes = recipes,
-            onShowClick = { id ->
-                Toast.makeText(this, id, Toast.LENGTH_SHORT).show()
-            },
-            onRemoveClick = { recipe ->
-                viewModel.removeRecipe(recipe)
-            }
-        )
+        adapter = RecipesAdapter(recipes = recipes, onShowClick = { id ->
+            Toast.makeText(this, id, Toast.LENGTH_SHORT).show()
+        }, onRemoveClick = { recipe ->
+            viewModel.removeRecipe(recipe)
+        })
+
+        binding.recycler.adapter = adapter
+    }
+
+    private fun saveRecipe() {
+        binding.fab.setOnClickListener {
+            val recipe = Recipe(
+                type = "Salgado",
+                name = "Teste do Vini",
+                author = "Vini",
+                ingredients = "",
+            )
+
+            viewModel.saveRecipe(recipe)
+        }
     }
 }

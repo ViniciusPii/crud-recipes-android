@@ -24,6 +24,7 @@ class RecipesAdapter(
         holder.bind(recipe, onShowClick, onRemoveClick)
     }
 
+
     class RecipeViewHolder(
         private val binding: ViewRecipeItemBinding
     ) : RecyclerView.ViewHolder(binding.root) {
