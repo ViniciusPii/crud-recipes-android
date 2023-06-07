@@ -1,7 +1,9 @@
 package com.example.crudreceitas
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
@@ -11,6 +13,7 @@ import com.example.crudreceitas.databinding.ActivityHomeBinding
 import com.example.crudreceitas.models.Recipe
 import com.example.crudreceitas.ui.viewmodels.HomeViewModel
 import com.example.crudreceitas.ui.viewmodels.HomeViewModel.State
+import com.example.crudreceitas.ui.viewmodels.HomeViewModel.Action
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class HomeActivity : AppCompatActivity() {
@@ -30,15 +33,23 @@ class HomeActivity : AppCompatActivity() {
             is State.Error -> showError()
         }
     }
+    private val actionObserver = Observer<Action?> { action ->
+        when (action) {
+            is Action.Delete -> viewModel.getAllRecipes()
+            else -> Unit
+        }
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
         viewModel.recipes.observe(this, stateObserver)
+        viewModel.action.observe(this, actionObserver)
         viewModel.getAllRecipes()
 
-        saveRecipe()
+        setupListeners()
     }
 
     private fun showLoading() {
@@ -84,16 +95,19 @@ class HomeActivity : AppCompatActivity() {
         binding.recycler.adapter = adapter
     }
 
-    private fun saveRecipe() {
+    private fun setupListeners() {
         binding.fab.setOnClickListener {
-            val recipe = Recipe(
-                type = "Salgado",
-                name = "Teste do Vini",
-                author = "Vini",
-                ingredients = "",
-            )
+            val intent = Intent(this, FormActivity::class.java)
 
-            viewModel.saveRecipe(recipe)
+            launcher.launch(intent)
         }
+
     }
+
+    private val launcher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            if (it.resultCode == 1) {
+                viewModel.getAllRecipes()
+            }
+        }
 }
